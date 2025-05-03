@@ -1,16 +1,21 @@
 package com.nikitos;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import org.jzy3d.analysis.AnalysisLauncher;
+
 public class Main {
-    public static void main(String[] args) {
-        Layer layers[] = new Layer[100];
-        TaskConfig taskConfig = new TaskConfig(0.01, 0.01, -1);
-        layers[0] = new Layer(100, 0);
+    public static void main(String[] args) throws Exception {
+        Layer[] layers = new Layer[100];
+        int steps = 50;
+        double h = 2/(double)steps;
+        int steps_time = layers.length;
+        TaskConfig taskConfig = new TaskConfig(0.1, h, -1, steps, steps_time);
+        layers[0] = new Layer(steps, 0);
         layers[0].initCond(taskConfig);
         for (int i = 0; i < layers.length - 1; i++) {
             layers[i + 1] = layers[i].newLayer(taskConfig);
         }
+        Plotter plotter = new Plotter(layers, taskConfig);
+        AnalysisLauncher.open(plotter);
     }
 
     public static double func_c(double u_x, double t) {
