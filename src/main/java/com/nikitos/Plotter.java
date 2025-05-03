@@ -13,6 +13,9 @@ import org.jzy3d.plot3d.builder.concrete.OrthonormalGrid;
 import org.jzy3d.plot3d.primitives.Shape;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 public class Plotter extends AWTAbstractAnalysis {
     private final Layer[] layers;
     private final TaskConfig modelConfig;
@@ -25,15 +28,11 @@ public class Plotter extends AWTAbstractAnalysis {
     @Override
     public void init() {
         // Define a function to plot
-        Func3D func = new Func3D((x, y) -> layers[(int) (x / modelConfig.endTime) * (modelConfig.steps_time - 1)]
-                .getData()[(int) ((y - modelConfig.initX) / (modelConfig.endX - modelConfig.initX)) * (modelConfig.steps - 1)]);
+        Func3D func = new Func3D((x, y) -> min(max(layers[(int) (x / modelConfig.endTime * (modelConfig.steps_time - 1))]
+                .getData()[(int) ((y - modelConfig.initX) / (modelConfig.endX - modelConfig.initX) * (modelConfig.steps - 1))], -10000),10000));
 
-
-        //Func3D func = new Func3D((x, y) -> (double) 0);
-        Range rangeT = new Range(0, 1);
-        Range rangeX = new Range(-1, 1);
-
-        int steps = modelConfig.steps;
+        Range rangeT = new Range(0, modelConfig.endTime);
+        Range rangeX = new Range(modelConfig.initX, modelConfig.endX);
 
         // Create the object to represent the function over the given range.
         final Shape surface =

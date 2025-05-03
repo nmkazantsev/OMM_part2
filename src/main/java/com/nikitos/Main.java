@@ -4,11 +4,11 @@ import org.jzy3d.analysis.AnalysisLauncher;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        Layer[] layers = new Layer[100];
-        int steps = 50;
+        Layer[] layers = new Layer[3];
+        int steps = 100;
         double h = 2/(double)steps;
         int steps_time = layers.length;
-        TaskConfig taskConfig = new TaskConfig(0.1, h, -1, steps, steps_time);
+        TaskConfig taskConfig = new TaskConfig(0.01, h, 0, steps, steps_time);
         layers[0] = new Layer(steps, 0);
         layers[0].initCond(taskConfig);
         for (int i = 0; i < layers.length - 1; i++) {
