@@ -7,7 +7,7 @@ import static java.lang.Math.pow;
 public class Layer {
     private final double[] data;
     private final int time_index;
-    private final double EPSILON = 0.000001;
+    private final double EPSILON = 0.001;
 
     public Layer(int size, int time_index) {
         data = new double[size];
@@ -29,9 +29,10 @@ public class Layer {
                         tau / h * q(getX(i - 1, config), getT(time_index + 1, config), layer.data[i - 1]);
                 double F_u = 1 + tau / h * q_u(getX(i, config));
                 v2 = v - F / F_u;
-                if (counter >= 2 && (v2 - v) / (1.0 - (v2 - v) / (v - v_m1)) < EPSILON) {
+                if (counter >= 2 && (v2 - v) / (1.0 - (v2 - v) / (v - v_m1)) < EPSILON || v2-v<EPSILON) {
                     break;
                 }
+                System.out.println( v2+" "+v+" "+v_m1 +" "+(v- F/F_u));
 
                 v_m1 = v;
                 v = v2;
@@ -43,7 +44,7 @@ public class Layer {
         return layer;
     }
 
-    private double q(double u, double t, double x) {
+    private double q(double x, double t, double u) {
         return 2.0 * u * x + t * x;
     }
 
