@@ -4,7 +4,7 @@ import org.jzy3d.analysis.AnalysisLauncher;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        Layer[] layers = new Layer[100];
+        Layer[] layers = new Layer[10];
         int steps = 150;
         double h = 1/(double)steps;
         int steps_time = layers.length;

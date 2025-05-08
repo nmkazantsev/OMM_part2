@@ -29,7 +29,7 @@ public class Layer {
                         tau / h * q(getX(i - 1, config), getT(time_index + 1, config), layer.data[i - 1]);
                 double F_u = 1 + tau / h * q_u(v);
                 v2 = v - F / F_u;
-                if (counter >= 2 && (v2 - v) / (1.0 - (v2 - v) / (v - v_m1)) < EPSILON) {
+                if (counter >= 2 && (v2 - v) / (1.0 - (v2 - v) / (v - v_m1)) < EPSILON || v2-v<EPSILON) {
                     break;
                 }
 
