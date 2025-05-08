@@ -36,7 +36,7 @@ public class Plotter extends AWTAbstractAnalysis {
 
         // Create the object to represent the function over the given range.
         final Shape surface =
-                new SurfaceBuilder().orthonormal(new OrthonormalGrid(rangeT, modelConfig.steps_time, rangeX, modelConfig.steps), func);
+                new SurfaceBuilder().orthonormal(new OrthonormalGrid(rangeT, modelConfig.steps_time, rangeX, modelConfig.steps-1), func);
         surface
                 .setColorMapper(new ColorMapper(new ColorMapRainbow(), surface, new Color(1, 1, 1, .5f)));
         surface.setFaceDisplayed(true);

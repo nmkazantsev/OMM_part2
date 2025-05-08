@@ -1,9 +1,4 @@
 package com.nikitos;
-
-import java.util.Arrays;
-
-import static com.nikitos.Main.func_c;
-import static java.lang.Math.abs;
 import static java.lang.Math.pow;
 
 /**
@@ -12,7 +7,7 @@ import static java.lang.Math.pow;
 public class Layer {
     private final double[] data;
     private final int time_index;
-    private final double EPSILON = 0.001;
+    private final double EPSILON = 0.000001;
 
     public Layer(int size, int time_index) {
         data = new double[size];
@@ -24,34 +19,36 @@ public class Layer {
         double tau = config.tau;
         double h = config.h;
         for (int i = 1; i < data.length; i++) {
-            double v = data[i], v2, v_m1=data[i];
-            int counter=0;
+            double t = getT(time_index, config);
+            layer.data[0] = (2.0 - pow(t, 2)) / (4.0 * t + 2.0);
+            double v = data[i], v2, v_m1 = data[i];
+            int counter = 0;
             while (true) {
                 //find F(v)
                 double F = v - data[i] + tau / h * q(getX(i, config), getT(time_index + 1, config), v) -
                         tau / h * q(getX(i - 1, config), getT(time_index + 1, config), layer.data[i - 1]);
-                double F_u = 1+tau/h*q_u(getX(i,config));
-                v2=v-F/F_u;
-                if(counter>=2 && (v2-v)/(1-(v2-v)/(v-v_m1))<EPSILON){
+                double F_u = 1 + tau / h * q_u(getX(i, config));
+                v2 = v - F / F_u;
+                if (counter >= 2 && (v2 - v) / (1.0 - (v2 - v) / (v - v_m1)) < EPSILON) {
                     break;
                 }
 
-                v_m1=v;
-                v=v2;
+                v_m1 = v;
+                v = v2;
                 counter++;
             }
-            layer.data[i]=v2;
+            layer.data[i] = v2;
         }
 
         return layer;
     }
 
     private double q(double u, double t, double x) {
-        return 2 * u * x + t * x;
+        return 2.0 * u * x + t * x;
     }
 
     private double q_u(double x) {
-        return 2 * x;
+        return 2.0 * x;
     }
 
     public void initCond(TaskConfig config) {
@@ -70,10 +67,5 @@ public class Layer {
 
     public static double getX(int x_index, TaskConfig config) {
         return config.h * x_index + config.initX;
-    }
-
-    private double u(double x, TaskConfig config) {
-        double hx = config.h;
-        return (data[(int) ((x - config.initX) / hx)] + data[(int) ((x - config.initX) / hx) + 1]) / 2;
     }
 }
