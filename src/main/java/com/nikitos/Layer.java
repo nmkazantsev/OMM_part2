@@ -1,5 +1,6 @@
 package com.nikitos;
-import static java.lang.Math.pow;
+
+import static java.lang.Math.*;
 
 /**
  * a 1d array + functions for calculating new one
@@ -7,7 +8,7 @@ import static java.lang.Math.pow;
 public class Layer {
     private final double[] data;
     private final int time_index;
-    private final double EPSILON = 0.000001;
+    private final double EPSILON = 0.0001;
 
     public Layer(int size, int time_index) {
         data = new double[size];
@@ -19,15 +20,14 @@ public class Layer {
         double tau = config.tau;
         double h = config.h;
         for (int i = 1; i < data.length; i++) {
-            double t = getT(time_index, config);
-            layer.data[0] = (2.0 - pow(t, 2)) / (4.0 * t + 2.0);
+            layer.data[0] = 1 + 1 / 2.0 * atan(getT(time_index, config));
             double v = data[i], v2, v_m1 = data[i];
             int counter = 0;
             while (true) {
                 //find F(v)
                 double F = v - data[i] + tau / h * q(getX(i, config), getT(time_index + 1, config), v) -
                         tau / h * q(getX(i - 1, config), getT(time_index + 1, config), layer.data[i - 1]);
-                double F_u = 1 + tau / h * q_u(getX(i, config));
+                double F_u = 1 + tau / h * q_u(v);
                 v2 = v - F / F_u;
                 if (counter >= 2 && (v2 - v) / (1.0 - (v2 - v) / (v - v_m1)) < EPSILON) {
                     break;
@@ -43,17 +43,17 @@ public class Layer {
         return layer;
     }
 
-    private double q(double u, double t, double x) {
-        return 2.0 * u * x + t * x;
+    private double q(double x, double t, double u) {
+        return -atan(1 + 2 * u + sin(u));
     }
 
-    private double q_u(double x) {
-        return 2.0 * x;
+    private double q_u(double u) {
+        return -(2 + cos(u)) / (1 + pow(1 + 2 * u + sin(u), 2));
     }
 
     public void initCond(TaskConfig config) {
         for (int i = 0; i < data.length; i++) {
-            data[i] = 1 + getX(i, config);
+            data[i] = cos(PI * getX(i, config) / 2);
         }
     }
 
