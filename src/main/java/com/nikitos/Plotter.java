@@ -29,10 +29,10 @@ public class Plotter extends AWTAbstractAnalysis {
     public void init() {
         // Define a function to plot
         Func3D func = new Func3D((x, y) -> min(max(layers[(int) (x / modelConfig.endTime * (modelConfig.steps_time - 1))]
-                .getData()[(int) ((y - modelConfig.initX) / (modelConfig.endX - modelConfig.initX) * (modelConfig.steps - 1))], -10000),10000));
+                .getData()[(int) ((-y - modelConfig.initX) / (modelConfig.endX - modelConfig.initX) * (modelConfig.steps - 1))], -10000),10000));
 
         Range rangeT = new Range(0, modelConfig.endTime);
-        Range rangeX = new Range(modelConfig.initX, modelConfig.endX);
+        Range rangeX = new Range(modelConfig.initX, -modelConfig.endX);
 
         // Create the object to represent the function over the given range.
         final Shape surface =

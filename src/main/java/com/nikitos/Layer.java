@@ -53,7 +53,7 @@ public class Layer {
 
     public void initCond(TaskConfig config) {
         for (int i = 0; i < data.length; i++) {
-            data[i] = 1 - getX(i, config);
+            data[i] = 1 + getX(i, config);
         }
     }
 

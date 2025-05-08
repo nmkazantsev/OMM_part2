@@ -6,9 +6,9 @@ public class Main {
     public static void main(String[] args) throws Exception {
         Layer[] layers = new Layer[100];
         int steps = 150;
-        double h = 2/(double)steps;
+        double h = 1/(double)steps;
         int steps_time = layers.length;
-        TaskConfig taskConfig = new TaskConfig(0.001, h, 0, steps, steps_time);
+        TaskConfig taskConfig = new TaskConfig(0.01, h, 0, steps, steps_time);
         layers[0] = new Layer(steps, 0);
         layers[0].initCond(taskConfig);
         for (int i = 0; i < layers.length - 1; i++) {
