@@ -12,6 +12,7 @@ import static java.lang.Math.pow;
 public class Layer {
     private final double[] data;
     private final int time_index;
+    private final double EPSILON = 0.001;
 
     public Layer(int size, int time_index) {
         data = new double[size];
@@ -20,32 +21,37 @@ public class Layer {
 
     public Layer newLayer(TaskConfig config) {
         Layer layer = new Layer(data.length, this.time_index + 1);
-        double A, B, C, D;
-        double c;//a value of c in average point
         double tau = config.tau;
         double h = config.h;
+        for (int i = 1; i < data.length; i++) {
+            double v = data[i], v2, v_m1=data[i];
+            int counter=0;
+            while (true) {
+                //find F(v)
+                double F = v - data[i] + tau / h * q(getX(i, config), getT(time_index + 1, config), v) -
+                        tau / h * q(getX(i - 1, config), getT(time_index + 1, config), layer.data[i - 1]);
+                double F_u = 1+tau/h*q_u(getX(i,config));
+                v2=v-F/F_u;
+                if(counter>=2 && (v2-v)/(1-(v2-v)/(v-v_m1))<EPSILON){
+                    break;
+                }
 
-        double t = time_index * config.tau;
-        System.out.println("time index: " + time_index);
-        layer.data[0] = 1;//(1 - 2 * pow(t, 2)) / (4 * t + 2);
-        for (int i = 0; i < data.length - 1; i++) {
-            c = 2;//-((data[i] + data[i + 1]) + ((double) time_index + 0.5) * config.tau);//func_c(u(getX(i, config), config), getT(time_index, config));
-            A = -1 / (2 * tau) - 1 / (2 * h) * c;
-            B = 1 / (2 * tau) - 1 / (2 * h) * c;
-            C = -1 / (2 * tau) + 1 / (2 * h) * c;
-            D = 1 / (2 * tau) + 1 / (2 * h) * c;
-            System.out.println("x: " + getX(i, config) + " A: " + A + ", B: " + B + ", C: " + C + ", D: " + D + " c: " + c);
-            System.out.println("i: " + data[i] + " i+1: " + data[i + 1]);
-            layer.data[i + 1] = ((A * data[i] + B * data[i + 1] + C * layer.data[i]) / D);
-            System.out.println("result " + layer.data[i + 1]);
+                v_m1=v;
+                v=v2;
+                counter++;
+            }
+            layer.data[i]=v2;
         }
-        double maxSpeed = Arrays.stream(data).max().orElse(0.0);
-        if (maxSpeed * config.tau / config.h > 1.0) {
-            throw new IllegalStateException("Нарушено условие Куранта");
-        }
-        System.out.println("\n\n===========================================\n\n");
 
         return layer;
+    }
+
+    private double q(double u, double t, double x) {
+        return 2 * u * x + t * x;
+    }
+
+    private double q_u(double x) {
+        return 2 * x;
     }
 
     public void initCond(TaskConfig config) {

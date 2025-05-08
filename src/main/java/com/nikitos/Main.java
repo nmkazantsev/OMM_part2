@@ -4,8 +4,7 @@ import org.jzy3d.analysis.AnalysisLauncher;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        Plotter2d plotter2d = new Plotter2d();
-        Layer[] layers = new Layer[3];
+        Layer[] layers = new Layer[30];
         int steps = 150;
         double h = 2/(double)steps;
         int steps_time = layers.length;
