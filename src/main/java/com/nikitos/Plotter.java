@@ -13,6 +13,8 @@ import org.jzy3d.plot3d.builder.concrete.OrthonormalGrid;
 import org.jzy3d.plot3d.primitives.Shape;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
 
+import java.util.function.BiFunction;
+
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
@@ -28,8 +30,8 @@ public class Plotter extends AWTAbstractAnalysis {
     @Override
     public void init() {
         // Define a function to plot
-        Func3D func = new Func3D((x, y) -> min(max(layers[(int) (x / modelConfig.endTime * (modelConfig.steps_time - 1))]
-                .getData()[(int) ((-y - modelConfig.initX) / (modelConfig.endX - modelConfig.initX) * (modelConfig.steps - 1))], -10000),10000));
+        Func3D func = new Func3D((x, y) ->layers[(int) (x / modelConfig.endTime * (modelConfig.steps_time - 0.5f))]
+                .getData()[(int) ((-y - modelConfig.initX) / (modelConfig.endX - modelConfig.initX) * (modelConfig.steps - 0.5f))]);
 
         Range rangeT = new Range(0, modelConfig.endTime);
         Range rangeX = new Range(modelConfig.initX, -modelConfig.endX);

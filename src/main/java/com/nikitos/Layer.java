@@ -20,22 +20,20 @@ public class Layer {
         double tau = config.tau;
         double h = config.h;
         for (int i = 1; i < data.length; i++) {
-            double t = getT(time_index, config);
+            double t = getT(time_index + 1, config);
             layer.data[0] = (2.0 - pow(t, 2)) / (4.0 * t + 2.0);
-            double v = data[i], v2=0, v_m1 = data[i];
+            double v = data[i], v2 = 0, v_m1 = data[i];
             int counter = 0;
             while (true) {
                 //find F(v)
                 double F = v - data[i] + tau / h * q(getX(i, config), getT(time_index + 1, config), v) -
-                        tau / h * q(getX(i - 1, config), getT(time_index + 1, config), layer.data[i-1]);
-                double F_u = 1 + tau / h * q_u(getX(i, config));
+                        tau / h * q(getX(i - 1, config), getT(time_index + 1, config), layer.data[i - 1]);
+                double F_u = 1 + tau / h * q_u(v, getT(time_index + 1, config));
                 v2 = v - (F / F_u);
 
                 if (counter >= 2 && ((v2 - v) / (1.0 - (v2 - v) / (v - v_m1)) < EPSILON)) {
                     break;
                 }
-               // System.out.println(q(getX(i - 1, config), getT(time_index + 1, config), layer.data[i-1]));
-                System.out.println(  v - data[i] + tau / h * q(getX(i, config), getT(time_index + 1, config), v)+" "+F);
                 v_m1 = v;
                 v = v2;
                 counter++;
@@ -47,11 +45,11 @@ public class Layer {
     }
 
     private double q(double x, double t, double u) {
-        return 2.0 * u * x + t * x;
+        return pow(u, 2) + t * u;
     }
 
-    private double q_u(double x) {
-        return 2.0 * x;
+    private double q_u(double u, double t) {
+        return 2 * u + t;
     }
 
     public void initCond(TaskConfig config) {
