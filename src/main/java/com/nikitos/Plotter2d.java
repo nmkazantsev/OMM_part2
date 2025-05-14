@@ -27,10 +27,10 @@ public class Plotter2d {
             lines[i].setColor(Color.BLUE);
         }
         for (int i = 0; i < lines.length; i++) {
-            double t0 = i - (double) lines.length / 2;
+            double t0 =i/50.0;
             double[] x = new double[120];
             int ind = 0;
-            for (double t = -0.3; t < 0.3; t += 0.001) {
+            for (double t = -0.001; t < 0.001; t += 0.0001) {
                 double x1 = 2*t*(2-t*t)/(4*t+2)-(2-t0*t0)*t0/(4*t0+2)+(t*t-t0*t0)/2+t0;
                 //double x1=
                 lines[i].add(t, x1);

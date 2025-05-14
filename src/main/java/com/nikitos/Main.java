@@ -8,7 +8,7 @@ public class Main {
         int steps = 150;
         double h = 1/(double)steps;
         int steps_time = layers.length;
-        TaskConfig taskConfig = new TaskConfig(0.03, h, 0, steps, steps_time);
+        TaskConfig taskConfig = new TaskConfig(0.01, h, 0, steps, steps_time);
         layers[0] = new Layer(steps, 0);
         layers[0].initCond(taskConfig);
         for (int i = 0; i < layers.length - 1; i++) {
@@ -16,5 +16,6 @@ public class Main {
         }
         Plotter plotter = new Plotter(layers, taskConfig);
         AnalysisLauncher.open(plotter);
+        System.out.println(layers[(int)(1/taskConfig.tau)-1].getData()[steps-1]);
     }
 }
