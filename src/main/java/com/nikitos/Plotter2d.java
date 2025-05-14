@@ -31,7 +31,8 @@ public class Plotter2d {
             double[] x = new double[120];
             int ind = 0;
             for (double t = -0.3; t < 0.3; t += 0.001) {
-                double x1 = 2 * (2 - pow(t, 2)) / (4 * t + 2) * (t - t0) + (pow(t, 2)) / 2.0;
+                double x1 = 2*t*(2-t*t)/(4*t+2)-(2-t0*t0)*t0/(4*t0+2)+(t*t-t0*t0)/2+t0;
+                //double x1=
                 lines[i].add(t, x1);
                 ind++;
             }
@@ -70,7 +71,7 @@ public class Plotter2d {
             double[] x = new double[120];
             int ind = 0;
             for (double t = -0.3; t < 0.3; t += 0.001) {
-                double x1 = (x0 + 2 + pow(t, 2) / 2.0) / 3.0;
+                double x1 = (x0 + 2 + pow(t, 2) / 2.0) / (1+2*t);
                 lines[i].add(t, x1);
                 ind++;
             }
